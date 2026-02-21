@@ -38,8 +38,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
 
     // ── 5. Launch Puppeteer with Chromium ─────────────────────
+    // ✅ Fixed: explicit flags required for Vercel serverless
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-zygote',
+        '--single-process',
+      ],
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
       headless: true,
@@ -56,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ── 7. Load HTML String ───────────────────────────────────
     await page.setContent(html, {
-      waitUntil: 'networkidle0',  // waits for Google Fonts to load
+      waitUntil: 'networkidle0',
     })
 
     // ── 8. Generate PDF ───────────────────────────────────────
