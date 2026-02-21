@@ -1,4 +1,5 @@
-import puppeteer from '@vercel/puppeteer'
+import chromium from '@sparticuz/chromium'
+import puppeteer from 'puppeteer-core'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -36,8 +37,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
 
-    // ── 5. Launch Puppeteer ───────────────────────────────────
-    browser = await puppeteer.launch()
+    // ── 5. Launch Puppeteer with Chromium ─────────────────────
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    })
+
     const page = await browser.newPage()
 
     // ── 6. Set Viewport to A4 Width ───────────────────────────
