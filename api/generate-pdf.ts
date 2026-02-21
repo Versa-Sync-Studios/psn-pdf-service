@@ -38,13 +38,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
 
     // ── 5. Launch Puppeteer ───────────────────────────────────
+    // ✅ Fix: disable graphics mode + set LD_LIBRARY_PATH explicitly
+    chromium.setGraphicsMode = false
+
     const executablePath = await chromium.executablePath()
 
+    // ✅ Fix: set LD_LIBRARY_PATH to executable directory
+    const execDir = executablePath.substring(0, executablePath.lastIndexOf('/'))
+    process.env.LD_LIBRARY_PATH = `${execDir}:${process.env.LD_LIBRARY_PATH ?? ''}`
+
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-zygote',
+        '--single-process',
+      ],
       defaultViewport: chromium.defaultViewport,
       executablePath,
-      headless: true,  // ✅ Fixed — chromium.headless is string in v132
+      headless: true,
     })
 
     const page = await browser.newPage()
