@@ -1,5 +1,5 @@
 {
-  "regions": ["iad1"],
+  "regions": ["bom1"],
   "functions": {
     "api/generate-pdf.ts": {
       "maxDuration": 60,
