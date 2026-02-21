@@ -37,21 +37,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
 
-    // ── 5. Launch Puppeteer with Chromium ─────────────────────
-    // ✅ Fixed: explicit flags required for Vercel serverless
+    // ── 5. Launch Puppeteer ───────────────────────────────────
+    const executablePath = await chromium.executablePath()
+
     browser = await puppeteer.launch({
-      args: [
-        ...chromium.args,
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-zygote',
-        '--single-process',
-      ],
+      args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: true,
+      executablePath,
+      headless: chromium.headless,
     })
 
     const page = await browser.newPage()
@@ -93,7 +86,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
   } finally {
-    // ── 10. Always Close Browser ──────────────────────────────
     if (browser) {
       await browser.close()
     }
