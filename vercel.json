@@ -3,8 +3,7 @@
   "functions": {
     "api/generate-pdf.ts": {
       "maxDuration": 60,
-      "memory": 1024,
-      "runtime": "nodejs20.x"
+      "memory": 1024
     }
   }
 }
