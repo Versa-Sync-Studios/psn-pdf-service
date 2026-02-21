@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath,
-      headless: chromium.headless,
+      headless: true,  // ✅ Fixed — chromium.headless is string in v132
     })
 
     const page = await browser.newPage()
@@ -86,6 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
   } finally {
+    // ── 10. Always Close Browser ──────────────────────────────
     if (browser) {
       await browser.close()
     }
