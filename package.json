@@ -2,9 +2,12 @@
   "name": "psn-pdf-service",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
-    "@sparticuz/chromium": "^112.0.0",
-    "puppeteer-core": "^19.11.1"
+    "@sparticuz/chromium": "^132.0.0",
+    "puppeteer-core": "^24.1.1"
   },
   "devDependencies": {
     "@vercel/node": "^3.0.0",
